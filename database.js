@@ -16,7 +16,7 @@ client.query("SELECT user_id, game FROM votes", (err, res) => {
   console.log(res);
 });
 
-function getTop() {
+function getTop(callback) {
   client.query(
     `SELECT channel, game, vote
     FROM (
@@ -27,15 +27,7 @@ function getTop() {
     ) AS x
     WHERE rnk <= 5`,
     (err, res) => {
-      console.log(err, res);
-      const channels = [...new Set(res.rows.map((i) => i.channel))];
-      channels.forEach((channel) => {
-        sendMessage(
-          channel,
-          res.rows.filter((r) => r.channel === channel)
-        );
-      });
-      console.log(channels);
+      callback(err, res);
     }
   );
 }
@@ -52,4 +44,4 @@ function sendMessage(channel, votes) {
   console.log(token);
 }
 
-module.exports = { getTop };
+module.exports = { getTop, sendMessage };
