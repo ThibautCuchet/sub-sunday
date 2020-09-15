@@ -35,7 +35,7 @@ function getTop(callback) {
 
 function sendMessage(channel, votes) {
   let payload = {
-    exp: Date.now() + 3600,
+    exp: Math.floor(Date.now() / 1000) + 3600,
     channel_id: `${channel}`,
     pubsub_perms: {
       send: ["broadcast"],
