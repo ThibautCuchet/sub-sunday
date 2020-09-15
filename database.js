@@ -17,7 +17,7 @@ function getTop() {
   client.query(
     "SELECT user_id, game, COUNT(*) FROM votes GROUP BY game",
     (err, res) => {
-      console.log(res);
+      console.log(err, res);
     }
   );
 }
