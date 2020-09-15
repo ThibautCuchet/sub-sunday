@@ -40,6 +40,7 @@ function sendMessage(channel, votes) {
     pubsub_perms: {
       send: ["broadcast"],
     },
+    role: "external",
   };
   let token = jwt.sign(payload, Buffer.from(secret, "base64"));
   axios({
