@@ -51,7 +51,7 @@ function sendMessage(channel, votes) {
       targets: ["broadcast"],
     },
     headers: {
-      Authorization: `Bearer ${token}`,
+      Authorization: `Bearer ${Buffer.from(token, "base64")}`,
       "Client-Id": "5bvtvvqr57fetu4k6vc5edan5owm21",
     },
   }).catch((e) => console.log(e));
