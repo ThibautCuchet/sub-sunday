@@ -16,7 +16,7 @@ setInterval(
       });
       console.log(channels);
     }),
-  60000
+  10000
 );
 
 app.get("/top/:channel", (req, res) => {

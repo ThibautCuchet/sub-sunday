@@ -48,7 +48,7 @@ function sendMessage(channel, votes) {
     data: {
       content_type: "application/json",
       message: JSON.stringify(votes),
-      targets: "broadcast",
+      targets: ["broadcast"],
     },
     headers: {
       Authorization: `Bearer ${token}`,
