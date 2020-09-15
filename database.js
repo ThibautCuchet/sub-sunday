@@ -15,7 +15,7 @@ client.query("SELECT user_id, game FROM votes", (err, res) => {
 
 function getTop() {
   client.query(
-    "SELECT user_id, game, COUNT(*) FROM votes GROUP BY game",
+    "SELECT game, COUNT(user_id) as vote FROM votes GROUP BY game ORDER BY vote DESC LIMIT 5",
     (err, res) => {
       console.log(err, res);
     }
