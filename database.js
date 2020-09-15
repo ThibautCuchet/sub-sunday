@@ -41,7 +41,7 @@ function sendMessage(channel, votes) {
       send: ["broadcast"],
     },
   };
-  let token = jwt.sign(payload, secret);
+  let token = jwt.sign(payload, Buffer.from(secret, "base64"));
   axios({
     method: "post",
     url: `https://api.twitch.tv/extensions/message/${channel}`,
@@ -51,7 +51,7 @@ function sendMessage(channel, votes) {
       targets: ["broadcast"],
     },
     headers: {
-      Authorization: `Bearer ${Buffer.from(token, "base64")}`,
+      Authorization: `Bearer ${token}`,
       "Client-Id": "5bvtvvqr57fetu4k6vc5edan5owm21",
     },
   }).catch((e) => console.log(e));
