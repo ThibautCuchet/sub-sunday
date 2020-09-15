@@ -18,7 +18,14 @@ client.query("SELECT user_id, game FROM votes", (err, res) => {
 
 function getTop() {
   client.query(
-    "SELECT game, COUNT(user_id) as vote FROM votes GROUP BY game ORDER BY vote DESC LIMIT 5",
+    `SELECT channel, game, vote
+    FROM (
+        SELECT *, ROW_NUMBER() OVER (PARTITION BY channel ORDER BY vote DESC) AS rnk
+        FROM (
+        SELECT channel, game, COUNT(user_id) as vote FROM votes GROUP BY game, channel 
+        ) as y
+    ) AS x
+    WHERE rnk <= 5`,
     (err, res) => {
       console.log(err, res);
       const channels = [...new Set(res.rows.map((i) => i.channel))];
