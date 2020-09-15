@@ -13,7 +13,7 @@ client.query("SELECT user_id, game FROM votes", (err, res) => {
   console.log(res);
 });
 
-export function getTop() {
+function getTop() {
   client.query(
     "SELECT user_id, game, COUNT(*) FROM votes GROUP BY game",
     (err, res) => {
@@ -21,3 +21,5 @@ export function getTop() {
     }
   );
 }
+
+module.exports = { getTop };
