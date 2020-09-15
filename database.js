@@ -29,12 +29,18 @@ function getTop() {
     (err, res) => {
       console.log(err, res);
       const channels = [...new Set(res.rows.map((i) => i.channel))];
+      channels.forEach((channel) => {
+        sendMessage(
+          channel,
+          res.rows.filter((r) => r.channel === channel)
+        );
+      });
       console.log(channels);
     }
   );
 }
 
-function sendMessage(channel) {
+function sendMessage(channel, votes) {
   let payload = {
     exp: Date.now() + 3600,
     channel_id: `${channel}`,
