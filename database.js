@@ -1,5 +1,6 @@
 const { Client } = require("pg");
 const jwt = require("jsonwebtoken");
+const axios = require("axios");
 
 const secret = "jjk2OD6T1et6ZRZ1RDaPnvaoyADhwopS5I7NbmMQvFI=";
 
@@ -41,7 +42,19 @@ function sendMessage(channel, votes) {
     },
   };
   let token = jwt.sign(payload, secret);
-  console.log(token);
+  axios({
+    method: "post",
+    url: `https://api.twitch.tv/extensions/message/${channel}`,
+    data: {
+      content_type: "application/json",
+      message: JSON.stringify(votes),
+      targets: "broadcast",
+    },
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Client-Id": "5bvtvvqr57fetu4k6vc5edan5owm21",
+    },
+  }).catch((e) => console.log(e));
 }
 
 module.exports = { getTop, sendMessage };
