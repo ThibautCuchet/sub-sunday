@@ -5,7 +5,7 @@ const app = express();
 
 setInterval(
   () =>
-    getTop((err, data) => {
+    getTop((err, res) => {
       console.log(err, res);
       const channels = [...new Set(res.rows.map((i) => i.channel))];
       channels.forEach((channel) => {
