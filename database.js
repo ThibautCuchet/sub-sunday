@@ -5,7 +5,9 @@ const axios = require("axios");
 const secret = "jjk2OD6T1et6ZRZ1RDaPnvaoyADhwopS5I7NbmMQvFI=";
 
 const client = new Client({
-  connectionString: process.env.DATABASE_URL,
+  connectionString:
+    process.env.DATABASE_URL ||
+    "postgres://pfqhhhtonuabyd:c562a2d74f126fd3a86f4b3e9ec613f08ed5adf9f1c883052421f5e8b3897525@ec2-52-202-198-60.compute-1.amazonaws.com:5432/dbonkjbrkjq1t6",
   ssl: {
     rejectUnauthorized: false,
   },
@@ -58,4 +60,16 @@ function sendMessage(channel, votes) {
   }).catch((e) => console.log(e));
 }
 
-module.exports = { getTop, sendMessage };
+function saveVote(user, game, channel) {
+  console.log(user, game, channel);
+  client.query(
+    `INSERT INTO votes (user_id, game, channel)
+      VALUES(${user},'${game}', ${channel})
+    ON CONFLICT (user_id, channel)
+    DO 
+    UPDATE
+    SET game=EXCLUDED.game`
+  );
+}
+
+module.exports = { getTop, sendMessage, saveVote };
