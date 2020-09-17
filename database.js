@@ -21,7 +21,7 @@ client.query("SELECT user_id, game FROM votes", (err, res) => {
 
 function getTop(callback) {
   client.query(
-    `SELECT channel, game,  CAST(vote as float) / CAST(total as float) * 100, vote, total
+    `SELECT channel, game,  CAST(vote as float) / CAST(total as float) * 100 as percent, vote, total
     FROM (
         SELECT *, ROW_NUMBER() OVER (PARTITION BY channel ORDER BY vote DESC) AS rnk
         FROM (
