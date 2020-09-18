@@ -3,7 +3,7 @@ const bodyParser = require("body-parser");
 const jwt = require("jsonwebtoken");
 const cors = require("cors");
 
-const { getTop, sendMessage, saveVote } = require("./database");
+const { getTop, sendMessage, saveVote, getGames } = require("./database");
 
 const secret = "jjk2OD6T1et6ZRZ1RDaPnvaoyADhwopS5I7NbmMQvFI=";
 const PORT = process.env.PORT || 3001;
@@ -15,7 +15,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
 setInterval(
   () =>
     getTop((err, res) => {
-      console.log(err, res);
       const channels = [...new Set(res.rows.map((i) => i.channel))];
       channels.forEach((channel) => {
         sendMessage(
@@ -23,7 +22,6 @@ setInterval(
           res.rows.filter((r) => r.channel === channel)
         );
       });
-      console.log(channels);
     }),
   10000
 );
@@ -32,6 +30,12 @@ app.get("/top/:channel", (req, res) => {
   getTop((err, data) => {
     if (err) res.sendStatus(500);
     res.send(data.rows.filter((r) => r.channel == req.params.channel));
+  });
+});
+
+app.get("/games", (req, res) => {
+  getGames((err, response) => {
+    res.send(response.rows);
   });
 });
 

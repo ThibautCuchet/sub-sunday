@@ -1,6 +1,7 @@
 const { Client } = require("pg");
 const jwt = require("jsonwebtoken");
 const axios = require("axios");
+const { response } = require("express");
 
 const secret = "jjk2OD6T1et6ZRZ1RDaPnvaoyADhwopS5I7NbmMQvFI=";
 
@@ -14,10 +15,7 @@ const client = new Client({
 });
 
 client.connect();
-
-client.query("SELECT user_id, game FROM votes", (err, res) => {
-  console.log(res);
-});
+updateGame();
 
 function getTop(callback) {
   client.query(
@@ -68,7 +66,6 @@ function sendMessage(channel, votes) {
 }
 
 function saveVote(user, game, channel) {
-  console.log(user, game, channel);
   client.query(
     `INSERT INTO votes (user_id, game, channel)
       VALUES(${user},'${game}', ${channel})
@@ -79,4 +76,31 @@ function saveVote(user, game, channel) {
   );
 }
 
-module.exports = { getTop, sendMessage, saveVote };
+function getGames(callback) {
+  client.query(`SELECT game FROM games`, (err, res) => callback(err, res));
+}
+
+function updateGame() {
+  axios({
+    method: "get",
+    url: "https://api.steampowered.com/ISteamApps/GetAppList/v2/",
+  }).then((response) =>
+    getGames((err, res) => {
+      response.data.applist.apps
+        .filter((item) => !res.rows.includes(item.name))
+        .forEach((item) => {
+          client.query(
+            `INSERT INTO games (game) VALUES ('${item.name.replace(
+              "'",
+              "`"
+            )}')`,
+            (err, res) => {
+              if (err) console.log(err);
+            }
+          );
+        });
+    })
+  );
+}
+
+module.exports = { getTop, sendMessage, saveVote, getGames };
