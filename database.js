@@ -75,4 +75,4 @@ function saveVote(user, game, channel) {
   );
 }
 
-module.exports = { getTop, sendMessage, saveVote, getGames };
+module.exports = { getTop, sendMessage, saveVote };
