@@ -15,7 +15,6 @@ const client = new Client({
 });
 
 client.connect();
-updateGame();
 
 function getTop(callback) {
   client.query(
@@ -73,33 +72,6 @@ function saveVote(user, game, channel) {
     DO 
     UPDATE
     SET game=EXCLUDED.game`
-  );
-}
-
-function getGames(callback) {
-  client.query(`SELECT game FROM games`, (err, res) => callback(err, res));
-}
-
-function updateGame() {
-  axios({
-    method: "get",
-    url: "https://api.steampowered.com/ISteamApps/GetAppList/v2/",
-  }).then((response) =>
-    getGames((err, res) => {
-      response.data.applist.apps
-        .filter((item) => !res.rows.includes(item.name))
-        .forEach((item) => {
-          client.query(
-            `INSERT INTO games (game) VALUES ('${item.name.replace(
-              "'",
-              "`"
-            )}')`,
-            (err, res) => {
-              if (err) console.log(err);
-            }
-          );
-        });
-    })
   );
 }
 
