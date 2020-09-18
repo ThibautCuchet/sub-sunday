@@ -2,6 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const jwt = require("jsonwebtoken");
 const cors = require("cors");
+const data = require("./data.json");
 
 const { getTop, sendMessage, saveVote } = require("./database");
 
@@ -35,7 +36,7 @@ app.get("/top/:channel", (req, res) => {
 
 app.get("/complete/:text", (req, res) => {
   res.send(
-    ["Abc", "Bca", "Cab"].filter((item) =>
+    data.filter((item) =>
       item.toLowerCase().startsWith(req.params.text.toLowerCase())
     )
   );
