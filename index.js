@@ -36,7 +36,7 @@ app.get("/top/:channel", (req, res) => {
 app.get("/complete/:text", (req, res) => {
   res.send(
     ["Abc", "Bca", "Cab"].filter((item) =>
-      item.toLowerCase().startsWith(req.params.text.toLowerCase)
+      item.toLowerCase().startsWith(req.params.text.toLowerCase())
     )
   );
 });
